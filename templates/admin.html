@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SKYWORLD DESIGN - Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Khmer OS Siemreap","Noto Sans Khmer",sans-serif;background:linear-gradient(120deg,#2863b5,#102849);color:#172b4d}
+.login{min-height:100vh;display:grid;place-items:center;padding:22px}
+.card{background:#fff;width:min(100%,520px);padding:38px;border-radius:25px;box-shadow:0 25px 70px #07182d55}
+.logo{width:65px;height:65px;border-radius:20px;background:linear-gradient(135deg,#4287f5,#25bed0);display:grid;place-items:center;color:white;font-size:34px;font-weight:bold}
+.eyebrow{color:#3479e9;font-size:12px;letter-spacing:2px;margin-top:28px}
+h1{font-size:25px;margin:12px 0}
+.muted{color:#8291a8;font-size:14px;line-height:1.9}
+label{display:block;margin:20px 0 8px;font-size:14px}
+input{width:100%;padding:16px;border:1px solid #dce5f3;border-radius:13px;background:#f5f8fd;font-size:15px;outline:none}
+input:focus{border-color:#3479e9}
+button{cursor:pointer;font-family:inherit}
+.btn{width:100%;border:0;border-radius:13px;padding:16px;margin-top:24px;background:linear-gradient(100deg,#2864dc,#448df5);color:white;font-size:16px;font-weight:bold}
+.note{background:#eff6ff;padding:15px;border-radius:13px;margin-top:20px;font-size:13px;color:#526d96;line-height:2}
+.error{color:#d33;font-size:13px;margin-top:12px}
+#dashboard{display:none;min-height:100vh;background:#f3f6fc}
+.top{background:#142e52;color:white;padding:22px 5%;display:flex;justify-content:space-between;align-items:center}
+.top h2{margin:0;font-size:20px}
+.logout{background:#ffffff20;border:1px solid #ffffff55;color:white;padding:10px 16px;border-radius:10px}
+.main{max-width:1200px;margin:auto;padding:28px 20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.stat,.panel{background:white;padding:22px;border:1px solid #e5ebf5;border-radius:17px}
+.stat strong{display:block;font-size:30px;color:#3479e9;margin-top:8px}
+.panel{margin-top:22px;overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:500px}
+td,th{text-align:left;padding:13px;border-bottom:1px solid #eee;font-size:13px}
+th{background:#f1f5fc}
+@media(max-width:600px){.card{padding:25px}.stats{grid-template-columns:1fr}.top{padding:16px}.main{padding:15px 10px}}
+</style>
+</head>
+<body>
+<section class="login" id="login">
+<div class="card">
+<div class="logo">S</div>
+<div class="eyebrow">SECURE ADMINISTRATOR ACCESS</div>
+<h1>សូមស្វាគមន៍ អ្នកគ្រប់គ្រង</h1>
+<p class="muted">សូមបញ្ចូល Email និង Password ដើម្បីចូលទៅកាន់ប្រព័ន្ធគ្រប់គ្រង</p>
+<form id="loginForm">
+<label>អ៊ីមែលអ្នកគ្រប់គ្រង</label>
+<input id="email" type="email" placeholder="បញ្ចូល Email" required>
+<label>ពាក្យសម្ងាត់</label>
+<input id="password" type="password" placeholder="បញ្ចូល Password" required>
+<button class="btn" type="submit">ចូលទៅកាន់ Admin Dashboard →</button>
+<div class="error" id="error"></div>
+</form>
+<div class="note">🔒 ផ្ទាំងនេះសម្រាប់អ្នកគ្រប់គ្រងតែប៉ុណ្ណោះ។ គណនីបុគ្គលិកធម្មតាមិនអាចចូលបានទេ។</div>
+<p class="muted" style="text-align:center;margin-top:25px">SKYWORLD DESIGN · ADMIN PORTAL</p>
+</div>
+</section>
+
+<section id="dashboard">
+<header class="top">
+<div><h2>SKYWORLD DESIGN</h2><small>ផ្ទាំងគ្រប់គ្រងអ្នកគ្រប់គ្រង</small></div>
+<button class="logout" onclick="logout()">ចាកចេញ</button>
+</header>
+<main class="main">
+<h2>សួស្តី អ្នកគ្រប់គ្រង</h2>
+<p class="muted">សង្ខេបសកម្មភាពបុគ្គលិក</p>
+<div class="stats">
+<div class="stat">បុគ្គលិកសរុប<strong id="employees">0</strong></div>
+<div class="stat">របាយការណ៍សរុប<strong id="reports">0</strong></div>
+<div class="stat">របាយការណ៍ប្រចាំថ្ងៃ<strong id="daily">0</strong></div>
+</div>
+<div class="panel">
+<h3>បញ្ជីបុគ្គលិក</h3>
+<table><thead><tr><th>ឈ្មោះ</th><th>Email</th><th>ផ្នែក</th></tr></thead>
+<tbody id="employeeRows"></tbody></table>
+</div>
+<div class="panel">
+<h3>របាយការណ៍ប្រចាំខែ</h3>
+<strong id="monthly">0</strong>
+</div>
+</main>
+</section>
+<script>
+async function api(url,options={}){
+ const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json'},...options});
+ const d=await r.json();
+ if(!r.ok)throw new Error(d.detail||'មានបញ្ហា');
+ return d;
+}
+function safe(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.getElementById('loginForm').onsubmit=async e=>{
+ e.preventDefault();
+ const error=document.getElementById('error');
+ error.textContent='កំពុងផ្ទៀងផ្ទាត់គណនី...';
+ try{
+  await api('/api/admin/login',{method:'POST',body:JSON.stringify({
+   email:document.getElementById('email').value,
+   password:document.getElementById('password').value
+  })});
+  await loadDashboard();
+ }catch(err){error.textContent=err.message;}
+};
+async function loadDashboard(){
+ const [s,users]=await Promise.all([api('/api/admin/summary'),api('/api/admin/employees')]);
+ document.getElementById('employees').textContent=s.employees;
+ document.getElementById('reports').textContent=s.reports;
+ document.getElementById('daily').textContent=s.daily;
+ document.getElementById('monthly').textContent=s.monthly+' របាយការណ៍';
+ document.getElementById('employeeRows').innerHTML=users.length?
+ users.map(u=>`<tr><td>${safe(u.full_name)}</td><td>${safe(u.email)}</td><td>${safe(u.department)}</td></tr>`).join(''):
+ '<tr><td colspan="3">មិនទាន់មានបុគ្គលិក</td></tr>';
+ document.getElementById('login').style.display='none';
+ document.getElementById('dashboard').style.display='block';
+}
+async function logout(){
+ await api('/api/auth/logout',{method:'POST'});
+ document.getElementById('dashboard').style.display='none';
+ document.getElementById('login').style.display='grid';
+ document.getElementById('password').value='';
+ window.location.replace('/');
+}
+// Reuse an existing session only when it belongs to an administrator.
+(async function restoreAdminSession(){
+ try{
+  const me=await api('/api/me');
+  if(me.role==='admin') await loadDashboard();
+  else window.location.replace('/employee-form');
+ }catch(e){ /* No active session: keep the dedicated admin login visible. */ }
+})();
+</script>
+</body>
+</html>

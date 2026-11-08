@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10233f"><title>{{ app_name }}</title>
+<link rel="stylesheet" href="/static/style.css">
+
+<style id="role-separated-dashboard-guard">
+body.employee-mode #adminNav,
+body.employee-mode #adminStats,
+body.employee-mode #employeesPage,
+body.employee-mode #reportsPage { display:none!important; }
+</style>
+
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<section id="authScreen" class="auth-screen">
+ <div class="hero">
+  <div class="brand"><span class="brand-icon">S</span><span>SKYWORLD <small>RESIDENCE</small></span></div>
+  <div class="hero-copy"><span class="eyebrow">PEOPLE · PERFORMANCE · PROGRESS</span><h1>រចនាការងារឱ្យកាន់តែឆ្លាតវៃ</h1><p>ប្រព័ន្ធគ្រប់គ្រងបុគ្គលិក និងរបាយការណ៍ការងារ ដែលរចនាឡើងសម្រាប់ក្រុមហ៊ុនទំនើប។</p>
+   <div class="hero-points"><span>✦ Secure employee accounts</span><span>✦ Daily & monthly reports</span><span>✦ Centralized admin dashboard</span></div>
+  </div><div class="hero-footer">SKYWORLD RESIDENCE · EMPLOYEE MANAGEMENT SYSTEM</div>
+ </div>
+ <div class="auth-side"><div class="auth-card">
+  <div class="mobile-brand brand"><span class="brand-icon">S</span><span>SKYWORLD <small>RESIDENCE WORKSPACE</small></span></div>
+  <div class="eyebrow blue">WELCOME TO SKYWORLD</div><h2 id="authTitle">សូមស្វាគមន៍មកវិញ</h2><p class="muted" id="authSub">ចូលគណនីរបស់អ្នក ដើម្បីបន្តការងារ។</p>
+  <div class="tabs"><button id="loginTab" class="active" onclick="setAuthMode('login')">ចូលគណនី</button><button id="registerTab" onclick="setAuthMode('register')">បង្កើតគណនី</button></div>
+  <div id="loginForm">
+   <label>Email</label><input id="loginEmail" type="email" placeholder="name@company.com" autocomplete="username">
+   <label>Password</label><input id="loginPassword" type="password" placeholder="បញ្ចូល Password" autocomplete="current-password">
+   <button class="primary full" onclick="login()">ចូលប្រព័ន្ធ <span>→</span></button>
+  </div>
+  <div id="registerForm" class="hidden">
+   <label>ឈ្មោះពេញ</label><input id="regName" placeholder="ឈ្មោះពេញរបស់អ្នក">
+   <label>Email</label><input id="regEmail" type="email" placeholder="name@company.com">
+   <label>ផ្នែកការងារ</label><input id="regDepartment" placeholder="ឧ. Design / Sales / Marketing">
+   <label>Password (យ៉ាងតិច 10 តួអក្សរ)</label><input id="regPassword" type="password" placeholder="បង្កើត Password">
+   <label>បញ្ជាក់ Password</label><input id="regPassword2" type="password" placeholder="វាយ Password ម្តងទៀត">
+   <button class="primary full" onclick="register()">បង្កើតគណនីថ្មី <span>→</span></button>
+  </div>
+  <div class="secure-note">🔒 Password របស់អ្នកត្រូវបាន Hash នៅ Server។ កុំចែករំលែក Password ជាមួយអ្នកដទៃ។</div>
+  <div style="margin-top:16px;text-align:center;font-size:13px"><a href="/admin" style="color:#3479e9;text-decoration:none;font-weight:600">ចូលផ្ទាំងអ្នកគ្រប់គ្រង (Admin Portal) →</a></div>
+ </div></div>
+</section>
+
+<section id="workspace" class="workspace hidden">
+ <header class="topbar"><div class="brand"><span class="brand-icon">S</span><span>SKYWORLD <small>RESIDENCE WORKSPACE</small></span></div>
+  <div class="top-user"><span class="avatar" id="avatar">U</span><span class="top-user-name"><b id="userName">User</b><small id="userRole">Employee</small></span><button class="outline-btn" onclick="logout()">ចាកចេញ ↗</button></div>
+ </header>
+ <main class="main">
+  <div class="welcome-row"><div><span class="eyebrow blue">WORKSPACE OVERVIEW</span><h1 id="pageTitle">ទិដ្ឋភាពការងារ</h1><p id="pageSub">គ្រប់គ្រងរបាយការណ៍ការងាររបស់អ្នក។</p></div><span class="live-pill">● SYSTEM ACTIVE</span></div>
+  <div id="employeeStats" class="stats-grid">
+   <div class="stat-card"><span>របាយការណ៍របស់ខ្ញុំ</span><b id="myReportCount">0</b><small>Submitted reports</small></div>
+   <div class="stat-card"><span>ឈ្មោះបុគ្គលិក</span><b id="myNameStat">—</b><small>Personal workspace</small></div>
+   <div class="stat-card"><span>ផ្នែកការងារ</span><b id="myDeptStat">—</b><small>Department</small></div>
+  </div>
+  <div id="adminStats" class="stats-grid hidden">
+   <div class="stat-card"><span>បុគ្គលិកសរុប</span><b id="statEmployees">0</b><small>Registered employees</small></div>
+   <div class="stat-card"><span>របាយការណ៍សរុប</span><b id="statReports">0</b><small>All submissions</small></div>
+   <div class="stat-card"><span>ប្រចាំថ្ងៃ</span><b id="statDaily">0</b><small>Daily reports</small></div>
+   <div class="stat-card"><span>ប្រចាំខែ</span><b id="statMonthly">0</b><small>Monthly reports</small></div>
+  </div>
+  <div class="layout">
+   <aside id="employeeNav" class="sidebar"><div class="nav-caption">MY WORKSPACE</div><button class="nav-link active" onclick="employeePage('reportPage',this)">▤ <span>បំពេញរបាយការណ៍</span></button><button class="nav-link" onclick="employeePage('historyPage',this)">◷ <span>ប្រវត្តិរបាយការណ៍</span></button><button class="nav-link" onclick="employeePage('profilePage',this)">◉ <span>ព័ត៌មានគណនី</span></button></aside>
+   <aside id="adminNav" class="sidebar hidden"><div class="nav-caption">ADMIN CONTROL</div><button class="nav-link active" onclick="adminPage('employeesPage',this)">♙ <span>បញ្ជីបុគ្គលិក</span></button><button class="nav-link" onclick="adminPage('reportsPage',this)">▤ <span>របាយការណ៍ទាំងអស់</span></button></aside>
+   <section id="reportPage" class="content-panel">
+    <div class="panel-heading"><div><h2>របាយការណ៍ការងារ</h2><p>EMPLOYEE PERFORMANCE REPORT</p></div><span class="draft-pill">NEW REPORT</span></div>
+    <div class="form-section"><div class="section-heading"><span>01</span><div><b>ព័ត៌មានបុគ្គលិក</b><small>EMPLOYEE DETAILS</small></div></div>
+     <div class="form-grid">
+      <div class="field"><label>ឈ្មោះពេញ</label><input id="fName" readonly></div><div class="field"><label>Email</label><input id="fEmail" readonly></div><div class="field"><label>ផ្នែកការងារ</label><input id="fDepartment"></div>
+      <div class="field"><label>ប្រភេទរបាយការណ៍</label><select id="fType"><option value="daily">ប្រចាំថ្ងៃ</option><option value="monthly" selected>ប្រចាំខែ</option></select></div><div class="field"><label>ខែ / កាលបរិច្ឆេទ</label><input id="fPeriod" type="month"></div><div class="field"><label>ថ្ងៃបំពេញ</label><input id="fDate" type="date"></div>
+     </div>
+    </div>
+    <div class="form-section"><div class="section-heading"><span>02</span><div><b>សូចនាករ និងលទ្ធផលការងារ (KPI)</b><small>PERFORMANCE TARGETS</small></div></div>
+     <div class="table-wrap"><table id="kpiTable"><thead><tr><th>ល.រ</th><th>សូចនាករ / ការងារ</th><th>គោលដៅ</th><th>លទ្ធផល</th><th>ខុសគ្នា</th><th>សម្រេច %</th><th>សម្គាល់</th></tr></thead><tbody>
+      <tr><td>១</td><td><input placeholder="ការងារទី១"></td><td><input></td><td><input></td><td><input></td><td><input></td><td><input></td></tr><tr><td>២</td><td><input placeholder="ការងារទី២"></td><td><input></td><td><input></td><td><input></td><td><input></td><td><input></td></tr><tr><td>៣</td><td><input placeholder="ការងារទី៣"></td><td><input></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+     </tbody></table></div><div class="table-actions"><button onclick="addRow('kpiTable')">＋ បន្ថែមជួរ KPI</button></div>
+    </div>
+    <div class="form-section"><div class="section-heading"><span>03</span><div><b>សកម្មភាពការងារ</b><small>WORK ACTIVITIES</small></div></div>
+     <div class="table-wrap"><table id="activityTable"><thead><tr><th>ល.រ</th><th>សកម្មភាព</th><th>កាលបរិច្ឆេទ</th><th>គោលដៅ</th><th>ស្ថានភាព</th><th>លទ្ធផល</th></tr></thead><tbody><tr><td>១</td><td><textarea placeholder="សកម្មភាពការងារ"></textarea></td><td><input type="date"></td><td><input></td><td><input></td><td><textarea></textarea></td></tr><tr><td>២</td><td><textarea></textarea></td><td><input type="date"></td><td><input></td><td><input></td><td><textarea></textarea></td></tr></tbody></table></div><div class="table-actions"><button onclick="addRow('activityTable')">＋ បន្ថែមសកម្មភាព</button></div>
+    </div>
+    <div class="form-section"><div class="section-heading"><span>04</span><div><b>Sales Log / កំណត់ត្រាលក់</b><small>SALES ACTIVITY</small></div></div>
+     <div class="table-wrap"><table id="salesTable"><thead><tr><th>កាលបរិច្ឆេទ</th><th>អតិថិជន</th><th>ផលិតផល</th><th>ចំនួន</th><th>ទឹកប្រាក់</th><th>ស្ថានភាព</th><th>សម្គាល់</th></tr></thead><tbody><tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td><td><input></td><td><input></td></tr><tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td><td><input></td><td><input></td></tr></tbody></table></div><div class="table-actions"><button onclick="addRow('salesTable')">＋ បន្ថែមកំណត់ត្រា</button></div>
+    </div>
+    <div class="form-section"><div class="section-heading"><span>05</span><div><b>បញ្ហាប្រឈម និងផែនការកែលម្អ</b><small>CHALLENGES & NEXT STEPS</small></div></div><textarea id="fIssues" class="wide-text" placeholder="សរសេរបញ្ហាប្រឈម ដំណោះស្រាយ និងផែនការបន្ទាប់..."></textarea></div>
+    <div class="form-actions no-print"><button class="outline-btn" onclick="clearForm()">សម្អាតទម្រង់</button><div><button class="outline-btn" onclick="window.print()">Print / PDF</button> <button class="primary-btn" onclick="submitReport()">ដាក់ស្នើរបាយការណ៍ →</button></div></div>
+   </section>
+   <section id="historyPage" class="content-panel hidden"><div class="panel-heading"><div><h2>ប្រវត្តិរបាយការណ៍របស់ខ្ញុំ</h2><p>ទិន្នន័យផ្ទាល់ខ្លួនរបស់អ្នក</p></div></div><div id="myHistoryList"></div></section>
+   <section id="profilePage" class="content-panel hidden"><div class="panel-heading"><div><h2>ព័ត៌មានគណនី</h2><p>YOUR ACCOUNT PROFILE</p></div></div><div class="form-section"><div class="form-grid"><div class="field"><label>ឈ្មោះពេញ</label><input id="pName" readonly></div><div class="field"><label>Email</label><input id="pEmail" readonly></div><div class="field"><label>ផ្នែក</label><input id="pDepartment" readonly></div></div><p class="muted">Admin មិនអាចមើល Password ដើមរបស់អ្នកបានទេ។ កុំចែករំលែក Password របស់អ្នក។</p></div></section>
+   <section id="employeesPage" class="content-panel hidden"><div class="panel-heading"><div><h2>បញ្ជីបុគ្គលិក</h2><p>ស្វែងរក និងមើលរបាយការណ៍របស់បុគ្គលិកណាមួយ</p></div><span class="draft-pill">ADMIN ONLY</span></div><input id="employeeSearch" class="search-input" placeholder="ស្វែងរកឈ្មោះ ឬ Email..." oninput="renderEmployees()"><div id="employeeList" class="list-stack"></div></section>
+   <section id="reportsPage" class="content-panel hidden"><div class="panel-heading"><div><h2>របាយការណ៍ទាំងអស់</h2><p>របាយការណ៍ដែលបុគ្គលិកបានដាក់ស្នើ</p></div><span class="draft-pill">ADMIN ONLY</span></div><input id="adminReportSearch" class="search-input" placeholder="ស្វែងរកតាមឈ្មោះ / Email..." oninput="renderReports()"><div id="adminReportList"></div></section>
+  </div>
+ </main>
+</section>
+<script src="/static/app.js"></script>
+<style>
+.password-eye-wrap {
+    position: relative !important;
+    width: 100% !important;
+}
+.password-eye-wrap input {
+    width: 100% !important;
+    padding-right: 55px !important;
+}
+.password-eye-btn {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    border: none !important;
+    background: transparent !important;
+    cursor: pointer !important;
+    font-size: 21px !important;
+    color: #477fd5 !important;
+    padding: 7px !important;
+    z-index: 5 !important;
+}
+.password-eye-btn:hover {
+    color: #164fbd !important;
+}
+</style>
+
+<script id="password-eye-installed">
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('input[type="password"]').forEach(function(input) {
+        if (input.dataset.eyeReady) return;
+        input.dataset.eyeReady = "true";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "password-eye-wrap";
+
+        input.parentNode.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
+
+        const eye = document.createElement("button");
+        eye.type = "button";
+        eye.className = "password-eye-btn";
+        eye.innerHTML = "👁";
+        eye.title = "បង្ហាញ Password";
+        eye.setAttribute("aria-label", "បង្ហាញ Password");
+
+        eye.addEventListener("click", function() {
+            const hidden = input.type === "password";
+
+            input.type = hidden ? "text" : "password";
+            eye.innerHTML = hidden ? "🙈" : "👁";
+            eye.title = hidden ? "លាក់ Password" : "បង្ហាញ Password";
+            eye.setAttribute("aria-label", eye.title);
+        });
+
+        wrapper.appendChild(eye);
+    });
+});
+</script></body></html>

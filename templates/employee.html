@@ -1,0 +1,446 @@
+﻿<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKYWORLD DESIGN | Employee Workspace</title>
+<style>
+@font-face{
+ font-family:KhmerCustom;
+ src:local("Khmer OS Siemreap");
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:#f3f6fc;color:#142d4d;
+ font-family:KhmerCustom,"Noto Sans Khmer",Arial,sans-serif;
+ font-size:14px
+}
+button,input,select,textarea{font:inherit}
+.topbar{
+ height:78px;background:#fff;display:flex;align-items:center;
+ justify-content:space-between;padding:0 35px;
+ box-shadow:0 2px 12px #153b6710;position:sticky;top:0;z-index:10
+}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{
+ width:52px;height:52px;border-radius:17px;
+ display:grid;place-items:center;color:white;font-size:28px;font-weight:bold;
+ background:linear-gradient(135deg,#62a6ff,#20c2d3);
+ box-shadow:0 8px 20px #3688df40
+}
+.brand b{font-size:19px;letter-spacing:.5px}
+.brand small{display:block;color:#8295b0;font-size:10px;letter-spacing:1.5px}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#eaf1ff;
+ display:grid;place-items:center;color:#3678df;font-weight:bold;font-size:18px}
+.profile small{display:block;color:#8a9bb2}
+.btn{
+ border:0;border-radius:10px;padding:11px 17px;
+ cursor:pointer;font-weight:bold
+}
+.btn-blue{background:linear-gradient(110deg,#2867df,#438cf0);color:white}
+.btn-light{background:#edf3ff;color:#2866c9}
+.btn-outline{background:white;border:1px solid #dfe8f4;color:#315b89}
+.container{max-width:1700px;margin:auto;padding:34px 36px}
+.intro{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.eyebrow{font-size:11px;letter-spacing:1.5px;color:#3678e5;font-weight:bold}
+h1{font-size:27px;margin:8px 0}
+.muted{color:#8b9db5;font-size:13px}
+.active{background:#e5f8f0;color:#13855f;border-radius:30px;padding:10px 16px;font-size:11px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
+.stat,.panel{
+ background:white;border:1px solid #e3eaf4;border-radius:19px;
+ box-shadow:0 8px 30px #173c6507
+}
+.stat{padding:23px}
+.stat-label{font-size:12px;color:#8294ad}
+.stat-value{font-size:25px;font-weight:bold;margin:10px 0;color:#163657}
+.stat-foot{font-size:10px;color:#98a8bb}
+.layout{display:grid;grid-template-columns:275px minmax(0,1fr);gap:20px;align-items:start}
+.sidebar{padding:15px;position:sticky;top:95px}
+.panel{padding:22px;margin-bottom:17px}
+.side-title{font-size:11px;color:#9aabc0;font-weight:bold;padding:10px}
+.nav{
+ display:flex;align-items:center;gap:12px;width:100%;
+ text-align:left;padding:15px 12px;margin:3px 0;
+ border:0;background:white;color:#8296b2;border-radius:11px;cursor:pointer
+}
+.nav:hover,.nav.selected{background:#edf3ff;color:#2769d8}
+.nav-icon{width:20px;text-align:center}
+.main-panel{min-width:0}
+.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}
+h2{font-size:19px;margin:0 0 5px}
+h3{font-size:15px;margin:0}
+.section{border:1px solid #e2eaf5;border-radius:16px;padding:18px;margin-top:17px}
+.section-head{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+.number{
+ width:37px;height:37px;border-radius:11px;background:#edf3ff;
+ color:#3478e5;display:grid;place-items:center;font-weight:bold
+}
+.section-head small{display:block;color:#95a6bd;font-size:10px;margin-top:3px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.field label{display:block;color:#637b99;font-size:12px;margin-bottom:7px}
+input,select,textarea{
+ width:100%;min-width:0;padding:12px;border:1px solid #dce6f2;
+ border-radius:11px;background:#fafcff;color:#18395d;outline:none
+}
+input:focus,select:focus,textarea:focus{
+ border-color:#5795ee;box-shadow:0 0 0 3px #5795ee18
+}
+input[readonly]{background:#f3f6fb}
+.table-wrap{width:100%;overflow-x:auto;border:1px solid #e5ebf4;border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:850px}
+th{background:#edf3fb;color:#345779;font-size:12px;padding:13px 9px;border:1px solid #e0e8f2}
+td{padding:7px;border:1px solid #e8edf4}
+td:first-child{background:#f8faff;font-weight:bold;text-align:center;min-width:105px}
+td input{padding:9px 7px;background:white;text-align:center;border-radius:8px}
+.total td{background:#eaf2ff;font-weight:bold}
+textarea{min-height:85px;resize:vertical}
+.signatures{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.message{margin-top:12px;color:#17855c;font-size:13px}
+.history-item{
+ border:1px solid #e3eaf4;padding:15px;border-radius:13px;
+ display:flex;justify-content:space-between;align-items:center;
+ gap:10px;margin-top:10px;flex-wrap:wrap
+}
+.badge{background:#e9f7ef;color:#16865d;padding:6px 12px;border-radius:20px;font-size:11px}
+.mobile-menu{display:none}
+footer{text-align:center;padding:25px;color:#9aabc0;font-size:11px}
+@media(max-width:900px){
+ .container{padding:25px 16px}
+ .layout{grid-template-columns:1fr}
+ .sidebar{position:static;display:flex;flex-wrap:wrap;gap:5px}
+ .side-title{width:100%}
+ .nav{width:auto;flex:1;justify-content:center;font-size:12px}
+ .nav-icon{display:none}
+}
+@media(max-width:600px){
+ .topbar{height:65px;padding:0 12px}
+ .logo{width:42px;height:42px}
+ .brand b{font-size:15px}
+ .brand small{font-size:8px}
+ .profile{gap:6px}
+ .profile>div:nth-child(2){display:none}
+ .container{padding:20px 11px}
+ h1{font-size:21px}
+ .stats{grid-template-columns:1fr 1fr}
+ .stat:last-child{grid-column:span 2}
+ .stat{padding:16px}
+ .stat-value{font-size:20px}
+ .grid{grid-template-columns:1fr 1fr}
+ .panel{padding:14px}
+ .section{padding:12px}
+ .nav{padding:12px 7px;font-size:11px}
+ .signatures{grid-template-columns:1fr}
+}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+@media print{
+ .topbar,.sidebar,.actions,.no-print,footer{display:none!important}
+ body{background:white}
+ .container{padding:0}
+ .layout{display:block}
+ .panel,.stat,.section{box-shadow:none;break-inside:avoid}
+ .main-panel{width:100%}
+ input,textarea{border:0;background:white!important}
+ .table-wrap{overflow:visible}
+ table{min-width:0;font-size:9px}
+ td input{padding:3px;font-size:9px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+ <div class="brand">
+  <div class="logo">S</div>
+  <div><b>SKYWORLD</b><small>DESIGN WORKSPACE</small></div>
+ </div>
+ <div class="profile">
+  <div class="avatar" id="avatar">S</div>
+  <div><b id="topname">Loading...</b><small>Employee Workspace</small></div>
+  <button class="btn btn-outline" onclick="logout()">ចាកចេញ ↗</button>
+ </div>
+</header>
+
+<main class="container">
+ <div class="intro">
+  <div>
+   <div class="eyebrow">WORKSPACE OVERVIEW</div>
+   <h1>ទំព័រការងាររបស់ខ្ញុំ</h1>
+   <div class="muted">បំពេញ និងគ្រប់គ្រងរបាយការណ៍ការងាររបស់អ្នក</div>
+  </div>
+  <span class="active">● SYSTEM ACTIVE</span>
+ </div>
+
+ <div class="stats">
+  <div class="stat">
+   <div class="stat-label">របាយការណ៍សរុប</div>
+   <div class="stat-value" id="reportCount">0</div>
+   <div class="stat-foot">Submitted reports</div>
+  </div>
+  <div class="stat">
+   <div class="stat-label">ឈ្មោះបុគ្គលិក</div>
+   <div class="stat-value" id="statName">-</div>
+   <div class="stat-foot">Personal workspace</div>
+  </div>
+  <div class="stat">
+   <div class="stat-label">ផ្នែកការងារ</div>
+   <div class="stat-value" id="statDepartment">-</div>
+   <div class="stat-foot">Department</div>
+  </div>
+ </div>
+
+ <div class="layout">
+  <aside class="panel sidebar">
+   <div class="side-title">MY WORKSPACE</div>
+   <button class="nav selected" onclick="go('report',this)"><span class="nav-icon">▤</span> បំពេញរបាយការណ៍</button>
+   <button class="nav" onclick="go('history-section',this)"><span class="nav-icon">◷</span> ប្រវត្តិរបាយការណ៍</button>
+   <button class="nav" onclick="go('account-section',this)"><span class="nav-icon">◉</span> ព័ត៌មានគណនី</button>
+  </aside>
+
+  <div class="main-panel">
+   <section class="panel" id="report">
+    <div class="panel-heading">
+     <div><h2>របាយការណ៍ការងារ</h2><div class="muted">EMPLOYEE PERFORMANCE REPORT</div></div>
+     <button class="btn btn-light" onclick="newReport()">NEW REPORT</button>
+    </div>
+
+    <div class="section" id="account-section">
+     <div class="section-head">
+      <div class="number">01</div>
+      <div><h3>ព័ត៌មានបុគ្គលិក</h3><small>EMPLOYEE DETAILS</small></div>
+     </div>
+     <div class="grid">
+      <div class="field"><label>ឈ្មោះពេញ</label><input id="full_name" readonly></div>
+      <div class="field"><label>Email</label><input id="email" readonly></div>
+      <div class="field"><label>ផ្នែកការងារ</label><input id="department" readonly></div>
+      <div class="field"><label>ប្រភេទរបាយការណ៍</label>
+       <select id="report_type"><option value="monthly">ប្រចាំខែ</option><option value="daily">ប្រចាំថ្ងៃ</option></select>
+      </div>
+      <div class="field"><label>ខែ / កាលបរិច្ឆេទ</label><input type="month" id="period"></div>
+      <div class="field"><label>ថ្ងៃបំពេញ</label><input type="date" id="workdate"></div>
+     </div>
+    </div>
+
+    <div class="section">
+     <div class="section-head">
+      <div class="number">02</div>
+      <div><h3>តារាងសូចនាករការងារ (KPI)</h3><small>KEY PERFORMANCE INDICATORS</small></div>
+     </div>
+     <div class="table-wrap"><table>
+      <thead><tr><th>ប្រភេទការងារ</th><th>គោលដៅ</th><th>លទ្ធផល</th><th>ចំណូល ($)</th><th>ចំណាយ ($)</th><th>ចំណេញ ($)</th><th>សម្រេច (%)</th><th>មតិយោបល់</th></tr></thead>
+      <tbody id="kpi">
+       <tr><td>ការលក់</td><td><input data-col="target" type="number"></td><td><input data-col="result" type="number"></td><td><input data-col="income" type="number"></td><td><input data-col="expense" type="number"></td><td><input data-col="profit" readonly></td><td><input data-col="percent" readonly></td><td><input data-col="note"></td></tr>
+       <tr><td>ផ្សព្វផ្សាយ</td><td><input data-col="target" type="number"></td><td><input data-col="result" type="number"></td><td><input data-col="income" type="number"></td><td><input data-col="expense" type="number"></td><td><input data-col="profit" readonly></td><td><input data-col="percent" readonly></td><td><input data-col="note"></td></tr>
+       <tr><td>ចុះជួបអតិថិជន</td><td><input data-col="target" type="number"></td><td><input data-col="result" type="number"></td><td><input data-col="income" type="number"></td><td><input data-col="expense" type="number"></td><td><input data-col="profit" readonly></td><td><input data-col="percent" readonly></td><td><input data-col="note"></td></tr>
+       <tr><td>សេវាកម្ម</td><td><input data-col="target" type="number"></td><td><input data-col="result" type="number"></td><td><input data-col="income" type="number"></td><td><input data-col="expense" type="number"></td><td><input data-col="profit" readonly></td><td><input data-col="percent" readonly></td><td><input data-col="note"></td></tr>
+       <tr class="total"><td>សរុប</td><td><input data-col="target" readonly></td><td><input data-col="result" readonly></td><td><input data-col="income" readonly></td><td><input data-col="expense" readonly></td><td><input data-col="profit" readonly></td><td><input data-col="percent" readonly></td><td>សរុប</td></tr>
+      </tbody>
+     </table></div>
+    </div>
+
+    <div class="section">
+     <div class="section-head">
+      <div class="number">03</div>
+      <div><h3>សកម្មភាពការងារប្រចាំសប្តាហ៍</h3><small>WEEKLY ACTIVITIES</small></div>
+     </div>
+     <div class="table-wrap"><table>
+      <thead><tr><th>សប្តាហ៍</th><th>ការងារដែលបានធ្វើ</th><th>គោលដៅ</th><th>លទ្ធផល</th><th>បញ្ហាប្រឈម</th><th>ដំណោះស្រាយ</th><th>មតិយោបល់</th></tr></thead>
+      <tbody id="weekly"></tbody>
+     </table></div>
+    </div>
+
+    <div class="section">
+     <div class="section-head">
+      <div class="number">04</div>
+      <div><h3>តារាងកត់ត្រាការលក់ (Sales Log)</h3><small>SALES RECORDS - 10 ROWS</small></div>
+     </div>
+     <div class="table-wrap"><table>
+      <thead><tr><th>កាលបរិច្ឆេទ</th><th>អតិថិជន</th><th>លេខទូរស័ព្ទ</th><th>ផលិតផល / សេវាកម្ម</th><th>ចំនួនទឹកប្រាក់ ($)</th><th>ស្ថានភាព</th><th>កំណត់សម្គាល់</th></tr></thead>
+      <tbody id="sales"></tbody>
+     </table></div>
+    </div>
+
+    <div class="section">
+     <div class="section-head">
+      <div class="number">05</div>
+      <div><h3>បញ្ហាប្រឈម និងផែនការបន្ទាប់</h3><small>CHALLENGES & NEXT ACTIONS</small></div>
+     </div>
+     <div class="grid">
+      <div class="field"><label>១. បញ្ហាប្រឈមទី១</label><textarea data-challenge="1"></textarea></div>
+      <div class="field"><label>២. បញ្ហាប្រឈមទី២</label><textarea data-challenge="2"></textarea></div>
+      <div class="field"><label>៣. ដំណោះស្រាយ</label><textarea data-challenge="3"></textarea></div>
+      <div class="field"><label>៤. ផែនការខែបន្ទាប់</label><textarea data-challenge="4"></textarea></div>
+     </div>
+    </div>
+
+    <div class="section">
+     <div class="section-head">
+      <div class="number">06</div>
+      <div><h3>ការបញ្ជាក់ និងហត្ថលេខា</h3><small>APPROVAL & SIGNATURES</small></div>
+     </div>
+     <div class="signatures">
+      <div class="field"><label>បុគ្គលិកបំពេញ</label><input id="sign_employee"></div>
+      <div class="field"><label>ប្រធានផ្នែកត្រួតពិនិត្យ</label><input id="sign_manager"></div>
+      <div class="field"><label>អ្នកគ្រប់គ្រង / Admin</label><input id="sign_admin"></div>
+     </div>
+    </div>
+
+    <div class="actions no-print">
+     <button class="btn btn-blue" onclick="saveReport()">រក្សាទុករបាយការណ៍</button>
+     <button class="btn btn-light" onclick="window.print()">បោះពុម្ព / Save PDF</button>
+     <button class="btn btn-outline" onclick="loadHistory()">មើលប្រវត្តិ</button>
+    </div>
+    <div id="message" class="message"></div>
+   </section>
+
+   <section class="panel" id="history-section">
+    <h2>ប្រវត្តិរបាយការណ៍</h2>
+    <div class="muted">របាយការណ៍ដែលអ្នកបានរក្សាទុក</div>
+    <div id="history"><button class="btn btn-light" onclick="loadHistory()">ផ្ទុកប្រវត្តិរបាយការណ៍</button></div>
+   </section>
+  </div>
+ </div>
+</main>
+<footer>SKYWORLD DESIGN · EMPLOYEE MANAGEMENT SYSTEM</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+let currentUser=null;
+
+function makeRows(id,count,columns){
+ for(let i=1;i<=count;i++){
+  const tr=document.createElement('tr');
+  const first=document.createElement('td');
+  first.textContent=id==='weekly'?'សប្តាហ៍ទី '+i:'ជួរ '+i;
+  tr.appendChild(first);
+  columns.forEach(c=>{
+   const td=document.createElement('td'),input=document.createElement('input');
+   input.dataset.col=c;
+   if(id==='sales'&&c==='date')input.type='date';
+   if(id==='sales'&&c==='amount')input.type='number';
+   td.appendChild(input);tr.appendChild(td);
+  });
+  $(id).appendChild(tr);
+ }
+}
+makeRows('weekly',5,['task','target','result','problem','solution','note']);
+makeRows('sales',10,['date','customer','phone','product','amount','status','note']);
+
+function go(id,button){
+ document.getElementById(id).scrollIntoView({behavior:'smooth'});
+ document.querySelectorAll('.nav').forEach(x=>x.classList.remove('selected'));
+ button.classList.add('selected');
+}
+
+async function api(url,options={}){
+ const r=await fetch(url,{credentials:'same-origin',...options});
+ const d=await r.json();
+ if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:'មានបញ្ហាក្នុងការតភ្ជាប់');
+ return d;
+}
+function safe(v){
+ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function collect(id){
+ return [...$(id).querySelectorAll('tr')].map(tr=>{
+  const row={category:tr.cells[0].textContent.trim()};
+  tr.querySelectorAll('[data-col]').forEach(x=>row[x.dataset.col]=x.value);
+  return row;
+ });
+}
+function calculate(){
+ const rows=[...$('kpi').querySelectorAll('tr:not(.total)')];
+ const sums={target:0,result:0,income:0,expense:0};
+ rows.forEach(tr=>{
+  const n=k=>Number(tr.querySelector(`[data-col="${k}"]`).value)||0;
+  tr.querySelector('[data-col="profit"]').value=(n('income')-n('expense')).toFixed(2);
+  tr.querySelector('[data-col="percent"]').value=n('target')?(n('result')/n('target')*100).toFixed(1)+'%':'0%';
+  Object.keys(sums).forEach(k=>sums[k]+=n(k));
+ });
+ const total=$('kpi').querySelector('.total');
+ Object.keys(sums).forEach(k=>total.querySelector(`[data-col="${k}"]`).value=sums[k].toFixed(2));
+ total.querySelector('[data-col="profit"]').value=(sums.income-sums.expense).toFixed(2);
+ total.querySelector('[data-col="percent"]').value=sums.target?(sums.result/sums.target*100).toFixed(1)+'%':'0%';
+}
+$('kpi').addEventListener('input',calculate);
+
+async function init(){
+ try{
+  currentUser=await api('/api/me');
+  $('full_name').value=currentUser.full_name;
+  $('email').value=currentUser.email;
+  $('department').value=currentUser.department||'';
+  $('topname').textContent=currentUser.full_name;
+  $('statName').textContent=currentUser.full_name;
+  $('statDepartment').textContent=currentUser.department||'-';
+  $('avatar').textContent=currentUser.full_name.charAt(0).toUpperCase();
+  $('sign_employee').value=currentUser.full_name;
+  const now=new Date();
+  $('period').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  $('workdate').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  await loadHistory();
+ }catch(e){
+  alert('សូមចូលគណនីបុគ្គលិកជាមុនសិន');
+  location.href='/';
+ }
+}
+
+async function saveReport(){
+ calculate();
+ const period=$('period').value;
+ if(!period){$('message').textContent='សូមជ្រើសរើសខែ';return;}
+ const payload={
+  employee:{full_name:currentUser.full_name,email:currentUser.email,department:currentUser.department},
+  kpi:collect('kpi'),
+  weekly_activities:collect('weekly'),
+  sales_log:collect('sales'),
+  challenges:[...document.querySelectorAll('[data-challenge]')].map(x=>x.value),
+  workdate:$('workdate').value,
+  signatures:{
+   employee:$('sign_employee').value,
+   manager:$('sign_manager').value,
+   admin:$('sign_admin').value
+  }
+ };
+ try{
+  $('message').textContent='កំពុងរក្សាទុក...';
+  await api('/api/reports',{
+   method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({
+    report_type:$('report_type').value,
+    report_period:period,payload
+   })
+  });
+  $('message').textContent='រក្សាទុករបាយការណ៍បានជោគជ័យ!';
+  await loadHistory();
+ }catch(e){$('message').textContent=e.message;}
+}
+async function loadHistory(){
+ try{
+  const rows=await api('/api/reports/mine');
+  $('reportCount').textContent=rows.length;
+  $('history').innerHTML=rows.length?rows.map(r=>`
+   <div class="history-item">
+    <div><b>${safe(r.report_type==='daily'?'របាយការណ៍ប្រចាំថ្ងៃ':'របាយការណ៍ប្រចាំខែ')} · ${safe(r.report_period)}</b>
+    <div class="muted">${safe(r.created_at)}</div></div>
+    <span class="badge">${safe(r.status)}</span>
+   </div>`).join(''):'<p class="muted">មិនទាន់មានរបាយការណ៍ទេ។</p>';
+ }catch(e){$('history').textContent=e.message;}
+}
+function newReport(){
+ if(!confirm('តើអ្នកចង់បង្កើតរបាយការណ៍ថ្មីមែនទេ?'))return;
+ document.querySelectorAll('#report input:not([readonly]),#report textarea').forEach(x=>x.value='');
+ $('sign_employee').value=currentUser?.full_name||'';
+ calculate();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+async function logout(){
+ try{await api('/api/auth/logout',{method:'POST'});location.href='/';}
+ catch(e){alert(e.message);}
+}
+init();
+</script>
+</body>
+</html>
